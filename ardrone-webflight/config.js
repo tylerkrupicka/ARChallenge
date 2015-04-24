@@ -5,7 +5,6 @@ var config = {
        //   , "hud"           // Display the artificial horizon, altimeter, compass, etc.
           , "battery"       // Display a simple battery widget in the header bar
           , "pilot"         // Pilot the drone with the keyboard
-	  , "gamepad"     // Pilot the drone with a joystick/gamepad
         //  , "blackbox"      // Experimental: Records all mision data (navData, raw video, PaVE headers, etc.)
         //, "replay"        // Experimental: Replay the data recorded by the blackbox
         ],

@@ -9,7 +9,6 @@ var pngStream = client.getPngStream();
 var processingImage = false;
 var lastPng;
 var navData;
-var flying = false;
 var startTime = new Date().getTime();
 var log = function(s){
     var time = ( ( new Date().getTime() - startTime ) / 1000 ).toFixed(2);

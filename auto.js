@@ -57,7 +57,7 @@ process.on('SIGINT', function() {
 
 //Face Detection Method using Cascades.
 //Parameters: name of character, cascade file, buffer array, size of buffer, bool.
-var detectJetson = function(name,cascade,buffer,size,foundBool){
+var detectJetson = function(name,cascade,buffer,size){
     //make sure we are not processing an image
     if( ( ! processingImage ) && lastPng ){
         //log('PROCESSING ' + name);
@@ -84,14 +84,14 @@ var detectJetson = function(name,cascade,buffer,size,foundBool){
                     }
                 }
                 if(count == size){
-                    foundBool = true;
+                    georgeFound = true;
                     //log diagnostics
-                    log(name + ': Found | buffer:' + count +'/' + size +' '+ foundBool);
+                    log(name + ': Found | buffer:' + count +'/' + size +' ');
                 }
                 else{
-                    foundBool = false;
+                    georgeFound = false;
                     //log diagnostics
-                    log(name + ':       | buffer:' + count +'/' + size +' '+ foundBool);
+                    log(name + ':       | buffer:' + count +'/' + size +' ');
                 }
 
                 //log('ENDING PROCESSING ' + name);
@@ -110,22 +110,22 @@ function jetsons(){
     //this staging scheme forces it to do each character. annoying but functional.
 
     if(georgeReady == true){
-        detectJetson("George", "georgeCascade20.xml", georgeArray, 3, georgeFound);
+        detectJetson("George", "georgeCascade20.xml", georgeArray, 3);
         georgeReady = false;
         janeReady = true;
     }
     else if(janeReady == true){
-        detectJetson("Jane  ", "georgeCascade20.xml", janeArray, 3, janeFound);
+        detectJetson("Jane  ", "georgeCascade20.xml", janeArray, 3);
         janeReady = false;
         judyReady = true;
     }
     else if(judyReady == true){
-        detectJetson("Judy  ", "georgeCascade20.xml", judyArray, 3, judyFound);
+        detectJetson("Judy  ", "georgeCascade20.xml", judyArray, 3);
         judyReady = false;
         elroyReady = true;
     }
     else if(elroyReady == true){
-        detectJetson("Elroy ", "georgeCascade20.xml", elroyArray, 3, elroyFound);
+        detectJetson("Elroy ", "georgeCascade20.xml", elroyArray, 3);
         elroyReady = false;
         georgeReady = true;
     }

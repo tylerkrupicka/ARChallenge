@@ -133,7 +133,7 @@ function jetsons(){
         elroyReady = false;
         georgeReady = true;
     }
-}
+};
 
 //we may be able to make this faster. ive been lowering it without consequence
 //so far.
@@ -145,10 +145,16 @@ mission.takeoff()
        //zero location
        .zero()
        //move to head level
-       .altitude(1.75)
-       .hover(5000)
-       //.taskSync(function)
+       .altitude(1)
+       .taskSync(detectCharacters)
        .land();
+
+function detectCharacters(){
+    while(georgeFound == false){
+        log('George Not Found');
+    }
+    return;
+};
 
 mission.run(function (err, result) {
    if (err) {

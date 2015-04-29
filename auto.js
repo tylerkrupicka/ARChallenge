@@ -26,6 +26,11 @@ var georgeFound = false;
 var janeFound = false;
 var judyFound = false;
 var elroyFound = false;
+//ready states
+var georgeReady = true;
+var janeReady = false;
+var judyReady = false;
+var elroyReady = false;
 
 //initialize PNG stream
 pngStream
@@ -40,6 +45,7 @@ pngStream
 var detectJetson = function(name,cascade,buffer,size,foundBool){
     //make sure we are not processing an image
     if( ( ! processingImage ) && lastPng ){
+        //log('PROCESSING ' + name);
         processingImage = true;
         //read the image
         cv.readImage( lastPng, function(err, im) {
@@ -70,25 +76,43 @@ var detectJetson = function(name,cascade,buffer,size,foundBool){
                 else{
                     foundBool = false;
                     //log diagnostics
-                    log(name + ': not found | buffer:' + count +'/' + size);
+                    log(name + ':       | buffer:' + count +'/' + size);
                 }
 
+                //log('ENDING PROCESSING ' + name);
                 processingImage = false;
 
             }, opts.scale, opts.neighbors
             , opts.min && opts.min[0], opts.min && opts.min[1]);
         });
-    };
+    }else{/*log(name + ' stopping because of processingImage')*/};
 };
 
-//classifying functions
+//classifying functions -- load balancing with ready
 function jetsons(){
-    //detectJetson("George", "georgeCascade20.xml", georgeArray, 5, georgeFound);
-    detectJetson("Jane", "georgeCascade17.xml", janeArray, 5, janeFound);
-    //detectJetson("Judy", "georgeCascade15.xml", judyArray, 5, judyFound);
-    //detectJetson("Elroy", "bananaClassifier.xml", elroyArray, 5, elroyFound);
+    if(georgeReady == true){
+        detectJetson("George", "georgeCascade20.xml", georgeArray, 5, georgeFound);
+        georgeReady = false;
+        janeReady = true;
+    }
+    else if(janeReady == true){
+        detectJetson("Jane  ", "georgeCascade17.xml", janeArray, 5, janeFound);
+        janeReady = false;
+        judyReady = true;
+    }
+    else if(judyReady == true){
+        detectJetson("Judy  ", "georgeCascade15.xml", judyArray, 5, judyFound);
+        judyReady = false;
+        elroyReady = true;
+    }
+    else if(elroyReady == true){
+        detectJetson("Elroy ", "bananaClassifier.xml", elroyArray, 5, elroyFound);
+        elroyReady = false;
+        georgeReady = true;
+    }
 }
-var jetsonInterval = setInterval(jetsons, 200);
+
+var jetsonInterval = setInterval(jetsons, 100);
 
 //Actual Script
 /*

@@ -48,28 +48,29 @@ var detectGeorge = function(name,cascade,buffer,size,foundBool){
                 //buffering
                 //push new length
                 buffer.unshift(found.length);
-                if(buffer.length >= size){
+                if(buffer.length > size){
                     //make sure we dont add too many
                     buffer.pop();
                 }
-                //loop through and check if we found them
+                //loop through the buffer
                 var f;
                 var count = 0;
-                for(var k = 0; k < found.length; k++) {
-                    f = found[k];
+                for(var k = 0; k < buffer.length; k++) {
+                    f = buffer[k];
+                    //entry in buffer is greater than 1
                     if(f >= 1){
                         count = count + 1;
                     }
                 }
-                if(count = found.length){
+                if(count == size){
                     foundBool = true;
                     //log diagnostics
-                    log('%s: found! | buffer:%d/%d',name,count,size)
+                    log(name + ': Found | buffer:' + count +'/' + size);
                 }
                 else{
                     foundBool = false;
                     //log diagnostics
-                    log('%s: not found | buffer:%d/%d',name,count,size)
+                    log(name + ': not found | buffer:' + count +'/' + size);
                 }
 
                 processingImage = false;

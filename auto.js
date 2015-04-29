@@ -37,7 +37,7 @@ pngStream
 
 //Face Detection Method using Cascades.
 //Parameters: name of character, cascade file, buffer array, size of buffer, bool.
-var detectGeorge = function(name,cascade,buffer,size,foundBool){
+var detectJetson = function(name,cascade,buffer,size,foundBool){
     //make sure we are not processing an image
     if( ( ! processingImage ) && lastPng ){
         processingImage = true;
@@ -81,10 +81,14 @@ var detectGeorge = function(name,cascade,buffer,size,foundBool){
     };
 };
 
-function george(){
-    detectGeorge("George", "georgeCascade.xml", georgeArray, 5, georgeFound);
+//classifying functions
+function jetsons(){
+    //detectJetson("George", "georgeCascade20.xml", georgeArray, 5, georgeFound);
+    detectJetson("Jane", "georgeCascade17.xml", janeArray, 5, janeFound);
+    //detectJetson("Judy", "georgeCascade15.xml", judyArray, 5, judyFound);
+    //detectJetson("Elroy", "bananaClassifier.xml", elroyArray, 5, elroyFound);
 }
-var georgeInterval = setInterval(george, 150);
+var jetsonInterval = setInterval(jetsons, 200);
 
 //Actual Script
 /*

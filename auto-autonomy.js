@@ -1,4 +1,6 @@
+var autonomy = require('ardrone-autonomy');
 var arDrone = require('ar-drone');
+var mission  = autonomy.createMission();
 var cv = require('opencv');
 var http    = require('http');
 
@@ -31,12 +33,29 @@ var janeReady = false;
 var judyReady = false;
 var elroyReady = false;
 
+///////////////////////////////INIT///////////////////////////////
+
 //initialize PNG stream
 pngStream
 .on('error', console.log)
 .on('data', function(pngBuffer) {
     //console.log("got image");
     lastPng = pngBuffer;
+});
+
+// Land on ctrl-c
+var exiting = false;
+process.on('SIGINT', function() {
+    if (exiting) {
+        process.exit(0);
+    } else {
+        console.log('Got SIGINT. Landing, press Control-C again to force exit.');
+        exiting = true;
+        mission.control().disable();
+        mission.client().land(function() {
+            process.exit(0);
+        });
+    }
 });
 
 ///////////////////////////CLASSIFICATION///////////////////////////
@@ -122,24 +141,26 @@ var jetsonInterval = setInterval(jetsons, 100);
 
 ////////////////////////FLIGHT//////////////////////////////////
 
-/*
-client.takeoff();
-client.after(5000,function(){
-    log("going up");
-    //this.up(1);
-}).after(1000,function(){
-    log("stopping");
-    this.stop();
-    flying = true;
+mission.takeoff()
+       //zero location
+       .zero()
+       //move to head level
+       .altitude(1.75)
+       .hover(5000)
+       //.taskSync(function)
+       .land();
+
+mission.run(function (err, result) {
+   if (err) {
+       console.trace("Oops, something bad happened: %s", err.message);
+       mission.client().stop();
+       mission.client().land();
+   } else {
+       console.log("Mission success!");
+       process.exit(0);
+   }
 });
 
-
-client.after(10000, function() {
-    flying = false;
-    this.stop();
-    this.land();
-});
-*/
 
 ///////////////////////STREAM SETUP////////////////////////////////
 client.on('navdata', function(navdata) {

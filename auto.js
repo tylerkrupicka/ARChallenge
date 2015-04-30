@@ -9,7 +9,7 @@ var pngStream = client.getPngStream();
 var processingImage = false;
 var lastPng;
 var navData;
-var flight = false; /////////////////FLIGHT ENABLE/////////////////
+var flight = true; /////////////////FLIGHT ENABLE/////////////////
 var man = false;
 var startTime = new Date().getTime();
 var log = function(s){
@@ -59,7 +59,7 @@ process.on('SIGINT', function() {
 //Parameters: name of character, cascade file, buffer array, size of buffer, bool.
 var detectJetson = function(name,cascade,buffer,size){
     //make sure we are not processing an image
-    if( ( ! processingImage ) && lastPng ){
+    if( ( ! processingImage ) && lastPng && (!man)){
         //log('PROCESSING ' + name);
         processingImage = true;
         //read the image
@@ -84,12 +84,34 @@ var detectJetson = function(name,cascade,buffer,size){
                     }
                 }
                 if(count == size){
-                    georgeFound = true;
+                    if(name == "George"){
+                        georgeFound = true;
+                    }
+                    else if(name == "Jane"){
+                        janeFound = true;
+                    }
+                    else if(name == "Jody"){
+                        jodyFound = true;
+                    }
+                    else if(name == "Elroy"){
+                        elroyFound = true;
+                    }
                     //log diagnostics
                     log(name + ': Found | buffer:' + count +'/' + size +' ');
                 }
                 else{
-                    georgeFound = false;
+                    if(name == "George"){
+                        georgeFound = false;
+                    }
+                    else if(name == "Jane"){
+                        janeFound = false;
+                    }
+                    else if(name == "Jody"){
+                        jodyFound = false;
+                    }
+                    else if(name == "Elroy"){
+                        elroyFound = false;
+                    }
                     //log diagnostics
                     log(name + ':       | buffer:' + count +'/' + size +' ');
                 }
@@ -137,9 +159,14 @@ var jetsonInterval = setInterval(jetsons, 150);
 var detection = setInterval(makeMoves,150);
 
 function makeMoves(){
-        console.log(georgeFound);
         if(georgeFound){
-            console.log("George Makes a Move!");
+            man = true;
+            console.log("WAVING");
+            //client.land();
+            client.animate('wave',4000);
+            //man = false;
+            georgeFound = false;
+            georgeArray = [];
         };
 
 };
@@ -147,7 +174,7 @@ function makeMoves(){
 
 if(flight == true){
     client.takeoff();
-    client.after(2000,function(){
+    client.after(5000,function(){
         log("going up");
         this.up(1);
     }).after(750,function(){
@@ -155,10 +182,6 @@ if(flight == true){
         this.stop();
     });
 
-    client.after(5000, function() {
-        this.stop();
-        this.land();
-    });
 }
 
 ///////////////////////STREAM SETUP////////////////////////////////

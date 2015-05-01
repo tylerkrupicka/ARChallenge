@@ -9,7 +9,7 @@ var pngStream = client.getPngStream();
 var processingImage = false;
 var lastPng;
 var navData;
-var flight = true; /////////////////FLIGHT ENABLE/////////////////
+var flight = false; /////////////////FLIGHT ENABLE/////////////////
 var man = false;
 var startTime = new Date().getTime();
 var log = function(s){
@@ -23,10 +23,10 @@ var georgeBuffer = 0;
 var janeBuffer = 0;
 var judyBuffer = 0;
 var elroyBuffer = 0;
-var georgeSize = 5;
-var janeSize = 5;
-var judySize = 5;
-var elroySize = 5;
+var georgeSize = 4;
+var janeSize = 4;
+var judySize = 4;
+var elroySize = 4;
 //ready states
 var georgeReady = true;
 var janeReady = false;
@@ -64,7 +64,7 @@ var detectGeorge = function(){
         processingImage = true;
         //read the image
         cv.readImage( lastPng, function(err, im) {
-            var opts = {};
+            var opts = {neighbors: 1, scale: 2};
             //opts.neighbors = 0;
             im.detectObject('georgeCascade20New.xml', opts, function(err, found) {
                     //buffer
@@ -87,7 +87,7 @@ var detectJane = function(){
         processingImage = true;
         //read the image
         cv.readImage( lastPng, function(err, im) {
-            var opts = {neighbors: 2, scale: 2};
+            var opts = {neighbors: 2};
             //opts.neighbors = 0;
             im.detectObject('janeCascade20.xml', opts, function(err, found) {
                     //buffer
@@ -116,8 +116,7 @@ var detectJudy = function(){
         processingImage = true;
         //read the image
         cv.readImage( lastPng, function(err, im) {
-            var opts = {};
-            //opts.neighbors = 0;
+            var opts = {neighbors: 1};
             im.detectObject('judyCascade20.xml', opts, function(err, found) {
                     //buffer
                     if(found.length >= 1){
@@ -139,7 +138,7 @@ var detectElroy = function(){
         processingImage = true;
         //read the image
         cv.readImage( lastPng, function(err, im) {
-            var opts = {};
+            var opts = {neighbors: 1};
             //opts.neighbors = 0;
             im.detectObject('elroyCascade20.xml', opts, function(err, found) {
                     //buffer

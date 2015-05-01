@@ -9,7 +9,7 @@ var pngStream = client.getPngStream();
 var processingImage = false;
 var lastPng;
 var navData;
-var flight = false; /////////////////FLIGHT ENABLE/////////////////
+var flight = true; /////////////////FLIGHT ENABLE/////////////////
 var man = false;
 var startTime = new Date().getTime();
 var log = function(s){
@@ -32,6 +32,11 @@ var georgeReady = true;
 var janeReady = false;
 var judyReady = false;
 var elroyReady = false;
+
+var georgeFound = false;
+var janeFound = false;
+var judyFound = false;
+var elroyFound = false;
 //initialize PNG stream
 pngStream
 .on('error', console.log)
@@ -61,7 +66,7 @@ var detectGeorge = function(){
         cv.readImage( lastPng, function(err, im) {
             var opts = {};
             //opts.neighbors = 0;
-            im.detectObject('georgeCascade20.xml', opts, function(err, found) {
+            im.detectObject('georgeCascade20New.xml', opts, function(err, found) {
                     //buffer
                     if(found.length >= 1){
                         georgeBuffer = georgeBuffer + 1;
@@ -89,11 +94,11 @@ var detectJane = function(){
                     if(found.length >= 1){
                         janeBuffer = janeBuffer + 1;
                         //save jane image to see what its detecting
-                        for(var k = 0; k < objects.length; k++) {
-                            var object = objects[k];
-                            im.rectangle([object.x, object.y], [object.x + object.width, object.y + object.height], color, 2);
-                        }
-                        im.save(fileName.replace(/.jpg/, ‘jane.jpg’));
+                        //for(var k = 0; k < objects.length; k++) {
+                            //var object = objects[k];
+                            //im.rectangle([object.x, object.y], [object.x + object.width, object.y + object.height], color, 2);
+                        //}
+                        //im.save(fileName.replace(/.jpg/, ‘jane.jpg’));
                     }
                     else{
                         janeBuffer = 0;

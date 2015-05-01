@@ -9,7 +9,7 @@ var pngStream = client.getPngStream();
 var processingImage = false;
 var lastPng;
 var navData;
-var flight = true; /////////////////FLIGHT ENABLE/////////////////
+var flight = false; /////////////////FLIGHT ENABLE/////////////////
 var man = false;
 var startTime = new Date().getTime();
 var log = function(s){
@@ -177,8 +177,8 @@ function makeMoves(){
             client.animate('wave',4000);
             client.after(4000,function(){
                 man = false;
-            }
-        };
+            });
+        }
 
         if(janeFound){
             man = true;
@@ -187,7 +187,7 @@ function makeMoves(){
             client.animate('wave',4000);
             client.after(4000,function(){
                 man = false;
-            }
+            });
         }
 
         if(judyFound){
@@ -197,7 +197,7 @@ function makeMoves(){
             client.animate('wave',4000);
             client.after(4000,function(){
                 man = false;
-            }
+            });
         }
 
         if(elroyFound){

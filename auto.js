@@ -113,7 +113,9 @@ var detectJetson = function(name,cascade,buffer,size){
                         elroyFound = false;
                     }
                     //log diagnostics
-                    log(name + ':       | buffer:' + count +'/' + size +' ');
+                    if(count > 0){
+                        log(name + ':       | buffer:' + count +'/' + size +' ');
+                    }
                 }
 
                 //log('ENDING PROCESSING ' + name);
@@ -132,22 +134,30 @@ function jetsons(){
     //this staging scheme forces it to do each character. annoying but functional.
 
     if(georgeReady == true){
-        detectJetson("George", "georgeCascade20.xml", georgeArray, 3);
+        if(!georgeFound){
+            detectJetson("George", "georgeCascade20.xml", georgeArray, 3);
+        }
         georgeReady = false;
         janeReady = true;
     }
-    else if(janeReady == true){
-        detectJetson("Jane  ", "georgeCascade20.xml", janeArray, 3);
+    if(janeReady == true){
+        if(!janeFound){
+            detectJetson("Jane  ", "janeCascade20.xml", janeArray, 3);
+        }
         janeReady = false;
         judyReady = true;
     }
-    else if(judyReady == true){
-        detectJetson("Judy  ", "georgeCascade20.xml", judyArray, 3);
+    if(judyReady == true){
+        if(!judyFound){
+            detectJetson("Judy  ", "judyCascade20.xml", judyArray, 3);
+        }
         judyReady = false;
         elroyReady = true;
     }
-    else if(elroyReady == true){
-        detectJetson("Elroy ", "georgeCascade20.xml", elroyArray, 3);
+    if(elroyReady == true){
+        if(!elroyFound){
+            detectJetson("Elroy ", "elroyCascade20.xml", elroyArray, 3);
+        }
         elroyReady = false;
         georgeReady = true;
     }
@@ -159,15 +169,45 @@ var jetsonInterval = setInterval(jetsons, 150);
 var detection = setInterval(makeMoves,150);
 
 function makeMoves(){
+        //george stuff
         if(georgeFound){
             man = true;
-            console.log("WAVING");
+            console.log("GEORGY MAKES A MOVE");
             //client.land();
             client.animate('wave',4000);
-            //man = false;
-            georgeFound = false;
-            georgeArray = [];
+            client.after(4000,function(){
+                man = false;
+            }
         };
+
+        if(janeFound){
+            man = true;
+            console.log("JANE MAKES A MOVE");
+            //client.land();
+            client.animate('wave',4000);
+            client.after(4000,function(){
+                man = false;
+            }
+        }
+
+        if(judyFound){
+            man = true;
+            console.log("JUDY MAKES A MOVE");
+            //client.land();
+            client.animate('wave',4000);
+            client.after(4000,function(){
+                man = false;
+            }
+        }
+
+        if(elroyFound){
+            man = true;
+            console.log("ELROY MAKES A MOVE");
+            client.land();
+            //client.animate('wave',4000);
+            //man = false;
+        }
+
 
 };
 ////////////////////////FLIGHT//////////////////////////////////

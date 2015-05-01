@@ -88,6 +88,12 @@ var detectJane = function(){
                     //buffer
                     if(found.length >= 1){
                         janeBuffer = janeBuffer + 1;
+                        //save jane image to see what its detecting
+                        for(var k = 0; k < objects.length; k++) {
+                            var object = objects[k];
+                            im.rectangle([object.x, object.y], [object.x + object.width, object.y + object.height], color, 2);
+                        }
+                        im.save(fileName.replace(/.jpg/, ‘jane.jpg’));
                     }
                     else{
                         janeBuffer = 0;

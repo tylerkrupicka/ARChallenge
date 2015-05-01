@@ -18,10 +18,10 @@ var log = function(s){
 }
 
 //init buffers
-var georgeArray = [];
-var janeArray = [];
-var judyArray = [];
-var elroyArray = [];
+var georgeArray = 0;
+var janeArray = 0;
+var judyArray = 0;
+var elroyArray = 0;
 //init detection booleans
 var georgeFound = false;
 var janeFound = false;
@@ -32,11 +32,6 @@ var georgeReady = true;
 var janeReady = false;
 var judyReady = false;
 var elroyReady = false;
-//
-var georgeRun = false;
-var janeRun = false;
-var judyRun = false;
-var elroyRun = false;
 
 //initialize PNG stream
 pngStream
@@ -70,33 +65,66 @@ var detectJetson = function(name,cascade,buffer,size){
         //read the image
         cv.readImage( lastPng, function(err, im) {
             var opts = {};
+            opts.min = 50;
+            //opts.neighbors = 0;
             im.detectObject(cascade, opts, function(err, found) {
                 //buffering
                 //push new length
-                buffer.unshift(found.length);
-                if(buffer.length > size){
-                    //make sure we dont add too many
-                    buffer.pop();
-                }
-                //loop through the buffer
-                var f;
-                var count = 0;
-                for(var k = 0; k < buffer.length; k++) {
-                    f = buffer[k];
-                    //entry in buffer is greater than 1
-                    if(f >= 1){
-                        count = count + 1;
+                if(found.length >= 1){
+                    if(name == "George"){
+                        georgeArray = georgeArray+1;
+                    }
+                    else if(name == "Jane"){
+                        janeArray = janeArray+1;
+                    }
+                    else if(name == "Judy"){
+                        judyArray = judyArray+1;
+                    }
+                    else if(name == "Elroy"){
+                        elroyArray = elroyArray+1;
                     }
                 }
-                if(count == size){
+                else{
+                    if(name == "George"){
+                        georgeArray =0;
+                    }
+                    else if(name == "Jane"){
+                        janeArray = 0;
+                    }
+                    else if(name == "Judy"){
+                        judyArray = 0;
+                    }
+                    else if(name == "Elroy"){
+                        elroyArray = 0;
+                    }
+                }
+
+                //loop through the buffer
+                var f;
+                var count = georgeArray;
+
+                if(name == "George"){
+                    count = georgeArray;
+                }
+                else if(name == "Jane"){
+                    count = janeArray;
+                }
+                else if (name == "Judy"){
+                    count = judyArray;
+                }
+                else if (name == "Elroy"){
+                    count = elroyArray;
+                }
+
+                if(count >= size){
                     if(name == "George"){
                         georgeFound = true;
                     }
                     else if(name == "Jane"){
                         janeFound = true;
                     }
-                    else if(name == "Jody"){
-                        jodyFound = true;
+                    else if(name == "Judy"){
+                        judyFound = true;
                     }
                     else if(name == "Elroy"){
                         elroyFound = true;
@@ -111,16 +139,16 @@ var detectJetson = function(name,cascade,buffer,size){
                     else if(name == "Jane"){
                         janeFound = false;
                     }
-                    else if(name == "Jody"){
-                        jodyFound = false;
+                    else if(name == "Judy"){
+                        judyFound = false;
                     }
                     else if(name == "Elroy"){
                         elroyFound = false;
                     }
                     //log diagnostics
-                    //if(count > 0){
+                    if(count > 0){
                         log(name + ':       | buffer:' + count +'/' + size +' ');
-                    //}
+                    }
                 }
 
                 //log('ENDING PROCESSING ' + name);
@@ -139,30 +167,25 @@ function jetsons(){
     //this staging scheme forces it to do each character. annoying but functional.
 
     if(georgeReady == true){
-        if(!georgeFound){
-            detectJetson("George", "georgeCascade20.xml", georgeArray, 3);
-        }
+        log('calling george');
+        detectJetson("George", "georgeCascade20.xml", georgeArray, 5);
         georgeReady = false;
         janeReady = true;
     }
-    if(janeReady == true){
-        if(!janeFound){
-            detectJetson("Jane  ", "janeCascade20.xml", janeArray, 3);
-        }
+    else if(janeReady == true){
+        log('calling jane');
+        detectJetson("Jane", "janeCascade20.xml", janeArray, 5);
         janeReady = false;
         judyReady = true;
     }
-    if(judyReady == true){
-        if(!judyFound){
-            detectJetson("Judy  ", "judyCascade20.xml", judyArray, 3);
-        }
+    else if(judyReady == true){
+        log('calling judy');
+        detectJetson("Judy", "judyCascade20.xml", judyArray, 5);
         judyReady = false;
         elroyReady = true;
     }
-    if(elroyReady == true){
-        if(!elroyFound){
-            detectJetson("Elroy ", "elroyCascade20.xml", elroyArray, 3);
-        }
+    else if(elroyReady == true){
+        detectJetson("Elroy", "elroyCascade20.xml", elroyArray, 5);
         elroyReady = false;
         georgeReady = true;
     }
@@ -174,49 +197,15 @@ var jetsonInterval = setInterval(jetsons, 150);
 var detection = setInterval(makeMoves,150);
 
 function makeMoves(){
-        //george stuff
-        if(georgeFound && !georgeRun){
+        if(georgeFound){
             man = true;
-            georgeRun = true;
-            console.log("GEORGY MAKES A MOVE");
+            console.log("WAVING");
             //client.land();
-            client.animate('wave',4000);
-            client.after(4000,function(){
-                man = false;
-            });
-        }
-
-        if(janeFound && !janeRun){
-            man = true;
-            janeRun = true;
-            console.log("JANE MAKES A MOVE");
-            //client.land();
-            client.animate('wave',4000);
-            client.after(4000,function(){
-                man = false;
-            });
-        }
-
-        if(judyFound && !judyRun){
-            man = true;
-            judyRun = true;
-            console.log("JUDY MAKES A MOVE");
-            //client.land();
-            client.animate('wave',4000);
-            client.after(4000,function(){
-                man = false;
-            });
-        }
-
-        if(elroyFound && !elroyRun){
-            man = true;
-            elroyRun = true;
-            console.log("ELROY MAKES A MOVE");
-            client.land();
             //client.animate('wave',4000);
             //man = false;
-        }
-
+            georgeFound = false;
+            georgeArray = [];
+        };
 
 };
 ////////////////////////FLIGHT//////////////////////////////////

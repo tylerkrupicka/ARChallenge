@@ -32,6 +32,11 @@ var georgeReady = true;
 var janeReady = false;
 var judyReady = false;
 var elroyReady = false;
+//
+var georgeRun = false;
+var janeRun = false;
+var judyRun = false;
+var elroyRun = false;
 
 //initialize PNG stream
 pngStream
@@ -113,9 +118,9 @@ var detectJetson = function(name,cascade,buffer,size){
                         elroyFound = false;
                     }
                     //log diagnostics
-                    if(count > 0){
+                    //if(count > 0){
                         log(name + ':       | buffer:' + count +'/' + size +' ');
-                    }
+                    //}
                 }
 
                 //log('ENDING PROCESSING ' + name);
@@ -170,8 +175,9 @@ var detection = setInterval(makeMoves,150);
 
 function makeMoves(){
         //george stuff
-        if(georgeFound){
+        if(georgeFound && !georgeRun){
             man = true;
+            georgeRun = true;
             console.log("GEORGY MAKES A MOVE");
             //client.land();
             client.animate('wave',4000);
@@ -180,8 +186,9 @@ function makeMoves(){
             });
         }
 
-        if(janeFound){
+        if(janeFound && !janeRun){
             man = true;
+            janeRun = true;
             console.log("JANE MAKES A MOVE");
             //client.land();
             client.animate('wave',4000);
@@ -190,8 +197,9 @@ function makeMoves(){
             });
         }
 
-        if(judyFound){
+        if(judyFound && !judyRun){
             man = true;
+            judyRun = true;
             console.log("JUDY MAKES A MOVE");
             //client.land();
             client.animate('wave',4000);
@@ -200,8 +208,9 @@ function makeMoves(){
             });
         }
 
-        if(elroyFound){
+        if(elroyFound && !elroyRun){
             man = true;
+            elroyRun = true;
             console.log("ELROY MAKES A MOVE");
             client.land();
             //client.animate('wave',4000);

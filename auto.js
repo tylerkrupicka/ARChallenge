@@ -17,22 +17,21 @@ var log = function(s){
     console.log(time+" \t"+s);
 }
 
+///////INITIALIZATION//////////////
 //init buffers
-var georgeArray = 0;
-var janeArray = 0;
-var judyArray = 0;
-var elroyArray = 0;
-//init detection booleans
-var georgeFound = false;
-var janeFound = false;
-var judyFound = false;
-var elroyFound = false;
+var georgeBuffer = 0;
+var janeBuffer = 0;
+var judyBuffer = 0;
+var elroyBuffer = 0;
+var georgeSize = 5;
+var janeSize = 5;
+var judySize = 5;
+var elroySize = 5;
 //ready states
 var georgeReady = true;
 var janeReady = false;
 var judyReady = false;
 var elroyReady = false;
-
 //initialize PNG stream
 pngStream
 .on('error', console.log)
@@ -40,122 +39,108 @@ pngStream
     //console.log("got image");
     lastPng = pngBuffer;
 });
-
 // Land on ctrl-c
 var exiting = false;
 process.on('SIGINT', function() {
     if (exiting) {
         process.exit(0);
     } else {
-        console.log('Got SIGINT. Landing, press Control-C again to force exit.');
+        console.log('Got BREAK. Landing, press Control-C again to force exit.');
         exiting = true;
         client.land()
     }
 });
 
-///////////////////////////CLASSIFICATION///////////////////////////
-
-//Face Detection Method using Cascades.
-//Parameters: name of character, cascade file, buffer array, size of buffer, bool.
-var detectJetson = function(name,cascade,buffer,size){
+////////CLASSIFICATION METHODS////////////////
+//not doing it streamlined this time
+var detectGeorge = function(){
     //make sure we are not processing an image
     if( ( ! processingImage ) && lastPng && (!man)){
-        //log('PROCESSING ' + name);
         processingImage = true;
         //read the image
         cv.readImage( lastPng, function(err, im) {
             var opts = {};
-            opts.min = 50;
             //opts.neighbors = 0;
-            im.detectObject(cascade, opts, function(err, found) {
-                //buffering
-                //push new length
-                if(found.length >= 1){
-                    if(name == "George"){
-                        georgeArray = georgeArray+1;
+            im.detectObject('georgeCascade20.xml', opts, function(err, found) {
+                    //buffer
+                    if(found.length >= 1){
+                        georgeBuffer = georgeBuffer + 1;
                     }
-                    else if(name == "Jane"){
-                        janeArray = janeArray+1;
+                    else{
+                        georgeBuffer = 0;
                     }
-                    else if(name == "Judy"){
-                        judyArray = judyArray+1;
-                    }
-                    else if(name == "Elroy"){
-                        elroyArray = elroyArray+1;
-                    }
-                }
-                else{
-                    if(name == "George"){
-                        georgeArray =0;
-                    }
-                    else if(name == "Jane"){
-                        janeArray = 0;
-                    }
-                    else if(name == "Judy"){
-                        judyArray = 0;
-                    }
-                    else if(name == "Elroy"){
-                        elroyArray = 0;
-                    }
-                }
-
-                //loop through the buffer
-                var f;
-                var count = georgeArray;
-
-                if(name == "George"){
-                    count = georgeArray;
-                }
-                else if(name == "Jane"){
-                    count = janeArray;
-                }
-                else if (name == "Judy"){
-                    count = judyArray;
-                }
-                else if (name == "Elroy"){
-                    count = elroyArray;
-                }
-
-                if(count >= size){
-                    if(name == "George"){
-                        georgeFound = true;
-                    }
-                    else if(name == "Jane"){
-                        janeFound = true;
-                    }
-                    else if(name == "Judy"){
-                        judyFound = true;
-                    }
-                    else if(name == "Elroy"){
-                        elroyFound = true;
-                    }
-                    //log diagnostics
-                    log(name + ': Found | buffer:' + count +'/' + size +' ');
-                }
-                else{
-                    if(name == "George"){
-                        georgeFound = false;
-                    }
-                    else if(name == "Jane"){
-                        janeFound = false;
-                    }
-                    else if(name == "Judy"){
-                        judyFound = false;
-                    }
-                    else if(name == "Elroy"){
-                        elroyFound = false;
-                    }
-                    //log diagnostics
-                    if(count > 0){
-                        log(name + ':       | buffer:' + count +'/' + size +' ');
-                    }
-                }
-
-                //log('ENDING PROCESSING ' + name);
                 processingImage = false;
 
-            }, opts.scale, opts.neighbors
-            , opts.min && opts.min[0], opts.min && opts.min[1]);
+            });
+        });
+    };
+};
+
+var detectJane = function(){
+    //make sure we are not processing an image
+    if( ( ! processingImage ) && lastPng && (!man)){
+        processingImage = true;
+        //read the image
+        cv.readImage( lastPng, function(err, im) {
+            var opts = {neighbors: 2, scale: 2};
+            //opts.neighbors = 0;
+            im.detectObject('janeCascade20.xml', opts, function(err, found) {
+                    //buffer
+                    if(found.length >= 1){
+                        janeBuffer = janeBuffer + 1;
+                    }
+                    else{
+                        janeBuffer = 0;
+                    }
+                processingImage = false;
+
+            });
+        });
+    };
+};
+
+var detectJudy = function(){
+    //make sure we are not processing an image
+    if( ( ! processingImage ) && lastPng && (!man)){
+        processingImage = true;
+        //read the image
+        cv.readImage( lastPng, function(err, im) {
+            var opts = {};
+            //opts.neighbors = 0;
+            im.detectObject('judyCascade20.xml', opts, function(err, found) {
+                    //buffer
+                    if(found.length >= 1){
+                        judyBuffer = judyBuffer + 1;
+                    }
+                    else{
+                        judyBuffer = 0;
+                    }
+                processingImage = false;
+
+            });
+        });
+    };
+};
+
+var detectElroy = function(){
+    //make sure we are not processing an image
+    if( ( ! processingImage ) && lastPng && (!man)){
+        processingImage = true;
+        //read the image
+        cv.readImage( lastPng, function(err, im) {
+            var opts = {};
+            //opts.neighbors = 0;
+            im.detectObject('elroyCascade20.xml', opts, function(err, found) {
+                    //buffer
+                    if(found.length >= 1){
+                        elroyBuffer = elroyBuffer + 1;
+                    }
+                    else{
+                        elroyBuffer = 0;
+                    }
+                processingImage = false;
+
+            });
         });
     };
 };
@@ -167,47 +152,73 @@ function jetsons(){
     //this staging scheme forces it to do each character. annoying but functional.
 
     if(georgeReady == true){
-        log('calling george');
-        detectJetson("George", "georgeCascade20.xml", georgeArray, 5);
+        detectGeorge();
         georgeReady = false;
         janeReady = true;
     }
     else if(janeReady == true){
-        log('calling jane');
-        detectJetson("Jane", "janeCascade20.xml", janeArray, 5);
+        detectJane();
         janeReady = false;
         judyReady = true;
     }
     else if(judyReady == true){
-        log('calling judy');
-        detectJetson("Judy", "judyCascade20.xml", judyArray, 5);
+        detectJudy();
         judyReady = false;
         elroyReady = true;
     }
     else if(elroyReady == true){
-        detectJetson("Elroy", "elroyCascade20.xml", elroyArray, 5);
+        detectElroy();
         elroyReady = false;
         georgeReady = true;
     }
 };
 
-//we may be able to make this faster. ive been lowering it without consequence
-//so far.
+//////////////DETECTION and LOGGING////////////////////////
 var jetsonInterval = setInterval(jetsons, 150);
 var detection = setInterval(makeMoves,150);
 
 function makeMoves(){
-        if(georgeFound){
-            man = true;
-            console.log("WAVING");
-            //client.land();
-            //client.animate('wave',4000);
-            //man = false;
-            georgeFound = false;
-            georgeArray = [];
-        };
+        //George
+        if(georgeBuffer >= 1 && georgeBuffer < georgeSize){
+            log('George:       | buffer:' + georgeBuffer +'/' + georgeSize);
+        }
+        else if(georgeBuffer >= georgeSize){
+            georgeBuffer = georgeSize;
+            log('George: Found | buffer:' + georgeBuffer +'/' + georgeSize);
+            client.animate('wave',4000);
+        }
 
+        //Jane
+        if(janeBuffer >= 1 && janeBuffer < janeSize){
+            log('Jane  :       | buffer:' + janeBuffer+'/' + janeSize);
+        }
+        else if(janeBuffer >= janeSize){
+            janeBuffer = janeSize;
+            log('Jane  : Found | buffer:' + janeBuffer +'/' + janeSize);
+            client.animate('wave',3000);
+        }
+
+        //Judy
+        if(judyBuffer >= 1 && judyBuffer < judySize){
+            log('Judy  :       | buffer:' + judyBuffer +'/' + judySize);
+        }
+        else if(judyBuffer >= judySize){
+            judyBuffer = judySize
+            log('Judy  : Found | buffer:' + judyBuffer +'/' + judySize);
+            client.animate('wave',3000);
+        }
+
+        //Elroy
+        if(elroyBuffer >= 1 && elroyBuffer < elroySize){
+            log('Elroy :       | buffer:' + elroyBuffer +'/' + elroySize);
+        }
+        else if(elroyBuffer >= elroySize){
+            elroyBuffer = elroySize;
+            log('Elroy : Found | buffer:' + elroyBuffer +'/' + elroySize);
+            client.land();
+        }
 };
+
 ////////////////////////FLIGHT//////////////////////////////////
 
 if(flight == true){

@@ -185,41 +185,45 @@ var detection = setInterval(makeMoves,150);
 
 function makeMoves(){
         //George
-        if(georgeBuffer >= 1 && georgeBuffer < georgeSize){
+        if(georgeBuffer >= 1 && georgeBuffer < georgeSize && georgeFound == false){
             log('George:       | buffer:' + georgeBuffer +'/' + georgeSize);
         }
-        else if(georgeBuffer >= georgeSize){
+        else if(georgeBuffer >= georgeSize && georgeFound == false){
             georgeBuffer = georgeSize;
+            georgeFound = true;
             log('George: Found | buffer:' + georgeBuffer +'/' + georgeSize);
             client.animate('wave',4000);
         }
 
         //Jane
-        if(janeBuffer >= 1 && janeBuffer < janeSize){
+        if(janeBuffer >= 1 && janeBuffer < janeSize && janeFound == false){
             log('Jane  :       | buffer:' + janeBuffer+'/' + janeSize);
         }
-        else if(janeBuffer >= janeSize){
+        else if(janeBuffer >= janeSize && janeFound == false){
             janeBuffer = janeSize;
+            janeFound = true;
             log('Jane  : Found | buffer:' + janeBuffer +'/' + janeSize);
             client.animate('wave',3000);
         }
 
         //Judy
-        if(judyBuffer >= 1 && judyBuffer < judySize){
+        if(judyBuffer >= 1 && judyBuffer < judySize && judyFound == false){
             log('Judy  :       | buffer:' + judyBuffer +'/' + judySize);
         }
-        else if(judyBuffer >= judySize){
-            judyBuffer = judySize
+        else if(judyBuffer >= judySize && judyFound == false){
+            judyBuffer = judySize;
+            judyFound = true;
             log('Judy  : Found | buffer:' + judyBuffer +'/' + judySize);
             client.animate('wave',3000);
         }
 
         //Elroy
-        if(elroyBuffer >= 1 && elroyBuffer < elroySize){
+        if(elroyBuffer >= 1 && elroyBuffer < elroySize && elroyFound == false){
             log('Elroy :       | buffer:' + elroyBuffer +'/' + elroySize);
         }
-        else if(elroyBuffer >= elroySize){
+        else if(elroyBuffer >= elroySize && elroyFound == false){
             elroyBuffer = elroySize;
+            elroyFound = true;
             log('Elroy : Found | buffer:' + elroyBuffer +'/' + elroySize);
             client.land();
         }
